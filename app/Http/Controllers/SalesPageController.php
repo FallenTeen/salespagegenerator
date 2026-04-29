@@ -38,14 +38,20 @@ class SalesPageController extends Controller
             'template'        => 'required|in:modern,bold,warm',
         ]);
 
-        $generated = $this->gemini->generateSalesPage($validated);
+        try {
+            $generated = $this->gemini->generateSalesPage($validated);
 
-        $page = auth()->user()->salesPages()->create([
-            ...$validated,
-            'generated_content' => $generated,
-        ]);
+            $page = auth()->user()->salesPages()->create([
+                ...$validated,
+                'generated_content' => $generated,
+            ]);
 
-        return redirect()->route('sales-pages.show', $page->id);
+            return redirect()->route('sales-pages.show', $page->id);
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'ai_error' => $e->getMessage()
+            ])->withInput();
+        }
     }
 
     public function show(SalesPage $salesPage)

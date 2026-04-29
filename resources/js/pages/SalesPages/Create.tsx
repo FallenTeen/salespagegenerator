@@ -13,13 +13,19 @@ interface FormData {
     template: TemplateType;
 }
 
+interface PageProps {
+    errors: {
+        ai_error?: string;
+    };
+}
+
 const templates: { value: TemplateType; label: string; desc: string; preview: React.ReactNode }[] = [
     { value: 'modern', label: 'Modern', desc: 'Clean, minimal & professional', preview: <Square className="h-6 w-6 text-gray-300" /> },
     { value: 'bold', label: 'Bold', desc: 'Dark, high-contrast & powerful', preview: <Square className="h-6 w-6 text-gray-900" /> },
     { value: 'warm', label: 'Warm', desc: 'Friendly, inviting & approachable', preview: <Square className="h-6 w-6 text-orange-400" /> },
 ];
 
-export default function Create() {
+export default function Create({ errors: pageErrors }: PageProps) {
     const [form, setForm] = useState<FormData>({
         product_name: '',
         description: '',
@@ -56,6 +62,17 @@ export default function Create() {
 
             <div className="py-10">
                 <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+                    {pageErrors.ai_error && (
+                        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                            <div className="flex items-center gap-2">
+                                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                </svg>
+                                <strong>AI Service Error</strong>
+                            </div>
+                            <p className="mt-1">{pageErrors.ai_error}</p>
+                        </div>
+                    )}
                     <form onSubmit={handleSubmit} className="space-y-6">
 
 

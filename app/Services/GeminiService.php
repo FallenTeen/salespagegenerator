@@ -36,7 +36,20 @@ class GeminiService
         ]);
 
         if ($response->failed()) {
-            throw new \Exception('Gemini API request failed: ' . $response->body());
+            $status = $response->status();
+            $errorMessage = 'Unable to generate your sales page at the moment. ';
+            
+            if ($status === 429) {
+                $errorMessage .= 'The AI service is currently experiencing high demand. Please try again in a few moments.';
+            } elseif ($status === 500 || $status === 503) {
+                $errorMessage .= 'The AI service is temporarily unavailable. Please try again later.';
+            } elseif ($status === 401) {
+                $errorMessage .= 'There was an authentication issue with the AI service.';
+            } else {
+                $errorMessage .= 'Something went wrong. Please try again later.';
+            }
+            
+            throw new \Exception($errorMessage);
         }
 
         $content = $response->json('candidates.0.content.parts.0.text');
