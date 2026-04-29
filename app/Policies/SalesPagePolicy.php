@@ -13,7 +13,7 @@ class SalesPagePolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -30,7 +30,7 @@ class SalesPagePolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
