@@ -63,7 +63,18 @@ export function AppSidebar() {
                 </SidebarMenu>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <TeamSwitcher />
+                        <button
+                            class="relative inline-flex h-8 w-56 items-center justify-start rounded-[0.5rem] border border-[--border] bg-[--background] px-4 py-2 text-sm font-normal whitespace-nowrap text-[--muted-foreground] shadow-none transition-colors [--background:#000000] [--border:#2e2e2e] [--color:#ffffff] [--muted-foreground:#9c9c9c] [--muted:#242424] hover:bg-[--muted] hover:text-[--color] focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+                            type="button"
+                        >
+                            <span class="hidden lg:inline-flex">
+                                Cari
+                            </span>
+                            <span class="inline-flex lg:hidden">Search...</span>
+                            <kbd class="[&amp;_span]:text-xs pointer-events-none absolute top-[0.3rem] right-[0.3rem] flex h-5 items-center gap-1 rounded border border-[--border] bg-[--muted] px-1.5 font-mono text-[10px] font-medium opacity-100 select-none">
+                                <span>⌘</span>K
+                            </kbd>
+                        </button>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
