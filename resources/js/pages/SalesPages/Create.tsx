@@ -1,7 +1,7 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { FormEvent, useState } from 'react';
 import { TemplateType } from '@/types/sales-page';
-import { Plus, FileText, Square, SquareIcon, Sparkles } from 'lucide-react';
+import { AlertCircle, Sparkles, Square } from 'lucide-react';
 
 interface FormData {
     product_name: string;
@@ -19,10 +19,10 @@ interface PageProps {
     };
 }
 
-const templates: { value: TemplateType; label: string; desc: string; preview: React.ReactNode }[] = [
-    { value: 'modern', label: 'Modern', desc: 'Clean, minimal & professional', preview: <Square className="h-6 w-6 text-gray-300" /> },
-    { value: 'bold', label: 'Bold', desc: 'Dark, high-contrast & powerful', preview: <Square className="h-6 w-6 text-gray-900" /> },
-    { value: 'warm', label: 'Warm', desc: 'Friendly, inviting & approachable', preview: <Square className="h-6 w-6 text-orange-400" /> },
+const templates: { value: TemplateType; label: string; desc: string; swatch: string }[] = [
+    { value: 'modern', label: 'Modern', desc: 'Clean, minimal & professional', swatch: 'bg-gray-100 border-gray-200' },
+    { value: 'bold',   label: 'Bold',   desc: 'Dark, high-contrast & powerful', swatch: 'bg-gray-900 border-gray-900' },
+    { value: 'warm',   label: 'Warm',   desc: 'Friendly, inviting & approachable', swatch: 'bg-orange-400 border-orange-400' },
 ];
 
 export default function Create({ errors: pageErrors }: PageProps) {
@@ -60,27 +60,29 @@ export default function Create({ errors: pageErrors }: PageProps) {
         <>
             <Head title="Generate Sales Page" />
 
-            <div className="py-10">
-                <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
-                    {pageErrors.ai_error && (
-                        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                            <div className="flex items-center gap-2">
-                                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                                </svg>
-                                <strong>AI Service Error</strong>
-                            </div>
-                            <p className="mt-1">{pageErrors.ai_error}</p>
+            <div className="flex flex-col gap-8 p-6 lg:p-8">
+                <div>
+                    <h1 className="text-xl font-semibold text-gray-900">Generate Sales Page</h1>
+                    <p className="mt-0.5 text-sm text-gray-500">Fill in the details below and AI will write your sales page.</p>
+                </div>
+
+                {pageErrors.ai_error && (
+                    <div className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4">
+                        <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
+                        <div>
+                            <p className="text-sm font-medium text-red-700">AI Service Error</p>
+                            <p className="mt-0.5 text-sm text-red-600">{pageErrors.ai_error}</p>
                         </div>
-                    )}
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    </div>
+                )}
 
+                <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                    <div className="max-w-2xl rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+                        <h2 className="mb-5 border-b border-gray-100 pb-3 text-sm font-semibold text-gray-900">
+                            Product Information
+                        </h2>
 
-                        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm space-y-5">
-                            <h3 className="font-semibold text-gray-900 text-base border-b border-gray-100 pb-3">
-                                Product Information
-                            </h3>
-
+                        <div className="flex flex-col gap-5">
                             <Field label="Product / Service Name" error={errors.product_name} required>
                                 <input
                                     type="text"
@@ -148,37 +150,37 @@ export default function Create({ errors: pageErrors }: PageProps) {
                                 />
                             </Field>
                         </div>
+                    </div>
 
-
-                        <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-                            <h3 className="font-semibold text-gray-900 text-base border-b border-gray-100 pb-3 mb-4">
-                                Design Template
-                            </h3>
-                            <div className="grid grid-cols-3 gap-3">
-                                {templates.map((tpl) => (
-                                    <button
-                                        key={tpl.value}
-                                        type="button"
-                                        onClick={() => handleChange('template', tpl.value)}
-                                        className={`rounded-xl border-2 p-4 text-left transition-all ${
-                                            form.template === tpl.value
-                                                ? 'border-indigo-500 bg-indigo-50'
-                                                : 'border-gray-200 hover:border-gray-300'
-                                        }`}
-                                    >
-                                        <div className="text-2xl mb-2">{tpl.preview}</div>
-                                        <div className="font-semibold text-sm text-gray-900">{tpl.label}</div>
-                                        <div className="text-xs text-gray-500 mt-0.5">{tpl.desc}</div>
-                                    </button>
-                                ))}
-                            </div>
+                    <div className="max-w-2xl rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+                        <h2 className="mb-5 border-b border-gray-100 pb-3 text-sm font-semibold text-gray-900">
+                            Design Template
+                        </h2>
+                        <div className="grid grid-cols-3 gap-3">
+                            {templates.map((tpl) => (
+                                <button
+                                    key={tpl.value}
+                                    type="button"
+                                    onClick={() => handleChange('template', tpl.value)}
+                                    className={`rounded-xl border-2 p-4 text-left transition-all ${
+                                        form.template === tpl.value
+                                            ? 'border-indigo-500 bg-indigo-50'
+                                            : 'border-gray-100 hover:border-gray-200'
+                                    }`}
+                                >
+                                    <div className={`mb-3 h-8 w-8 rounded-lg border ${tpl.swatch}`} />
+                                    <div className="text-sm font-semibold text-gray-900">{tpl.label}</div>
+                                    <div className="mt-0.5 text-xs text-gray-400">{tpl.desc}</div>
+                                </button>
+                            ))}
                         </div>
+                    </div>
 
-
+                    <div className="max-w-2xl">
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {loading ? (
                                 <>
@@ -189,14 +191,14 @@ export default function Create({ errors: pageErrors }: PageProps) {
                                     Generating with AI...
                                 </>
                             ) : (
-                                <span className="inline-flex items-center gap-2">
+                                <>
                                     <Sparkles className="h-4 w-4" />
                                     Generate Sales Page
-                                </span>
+                                </>
                             )}
                         </button>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </>
     );
@@ -204,18 +206,10 @@ export default function Create({ errors: pageErrors }: PageProps) {
 
 Create.layout = {
     breadcrumbs: [
-        {
-            title: 'Sales Pages',
-            href: '/sales-pages',
-        },
-        {
-            title: 'Create',
-            href: '/sales-pages/create',
-        },
+        { title: 'Sales Pages', href: '/sales-pages' },
+        { title: 'Create', href: '/sales-pages/create' },
     ],
 };
-
-
 
 function Field({
     label,
@@ -231,9 +225,10 @@ function Field({
     children: React.ReactNode;
 }) {
     return (
-        <div className="space-y-1">
-            <label className="block text-sm font-medium text-gray-700">
-                {label} {required && <span className="text-red-400">*</span>}
+        <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-700">
+                {label}
+                {required && <span className="ml-0.5 text-red-400">*</span>}
                 {hint && <span className="ml-1 font-normal text-gray-400">— {hint}</span>}
             </label>
             {children}
@@ -244,6 +239,6 @@ function Field({
 
 function inputClass(hasError: boolean): string {
     return `w-full rounded-lg border px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${
-        hasError ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-gray-50 focus:bg-white'
+        hasError ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-gray-50 focus:bg-white'
     }`;
 }
